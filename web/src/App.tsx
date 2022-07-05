@@ -1,25 +1,39 @@
 import React from 'react';
-import logo from './logo.svg';
+
+import { Repolist } from './components/Repolist';
 
 import './App.css';
 
 export function App() {
+  const [fullRepoList, setFullRepoList] = React.useState();
+  // fetch the repos list, give useEffect an empty dependency array so we only check once, logging status on error temporarily
+  React.useEffect(() => {
+    fetch('/repos').then(async (res) => {
+      if (res.status === 200) {
+        const data = res.json();
+        setFullRepoList(await data);
+      } else {
+        console.log(res.status);
+      }
+    });
+  }, []);
+  const styles = {
+    listWrapper: {
+      display: 'flex',
+      justifyContent: 'center',
+      width: '100%',
+    },
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Repo Viewer</h1>
+      <div style={styles.listWrapper}>
+        {!fullRepoList ? (
+          <div>Loading...</div>
+        ) : (
+          <Repolist repos={fullRepoList} />
+        )}
+      </div>
     </div>
   );
 }
