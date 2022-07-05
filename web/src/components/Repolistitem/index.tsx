@@ -18,9 +18,9 @@ export function Repolistitem({
 }) {
   const [viewDetails, setViewDetails] = useState(false);
   const [commitDetails, setCommitDetails] = useState({
-    name: 'Author unavailable',
-    date: 'Date unavailable',
-    message: 'Message unavailable',
+    name: '',
+    date: '',
+    message: '',
   });
   const [readmeMarkdown, setReadmeMarkdown] = useState('');
   const styles = {
@@ -49,24 +49,38 @@ export function Repolistitem({
   };
   async function clickHandler() {
     setViewDetails(!viewDetails);
-    const commitResponse = await fetch(
-      `https://api.github.com/repos/${repo.full_name}/commits/master`
-    ).then((response) => {
-      return response.json();
-    });
-    const newCommitDetails = {
-      name: commitResponse.commit.author.name,
-      date: commitResponse.commit.author.date,
-      message: commitResponse.commit.message,
-    };
-    const readmeData = await fetch(
-      `https://api.github.com/repos/${repo.full_name}/readme`
-    ).then((response) => {
-      return response.json();
-    });
-    const readme = atob(readmeData.content);
-    setReadmeMarkdown(readme);
-    setCommitDetails(newCommitDetails);
+    if (commitDetails.name === '') {
+      const commitResponse = await fetch(
+        `https://api.github.com/repos/${repo.full_name}/commits/master`
+      ).then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return {
+          commit: {
+            author: { name: 'Unavailable', date: 'Unavailable' },
+            message: 'No commit data available.',
+          },
+        };
+      });
+      const newCommitDetails = {
+        name: commitResponse.commit.author.name,
+        date: commitResponse.commit.author.date,
+        message: commitResponse.commit.message,
+      };
+      const readmeData = await fetch(
+        `https://api.github.com/repos/${repo.full_name}/readme`
+      ).then((response) => {
+        return response.json();
+      });
+      if (readmeData.content) {
+        const readme = atob(readmeData.content);
+        setReadmeMarkdown(readme);
+      } else {
+        setReadmeMarkdown('');
+      }
+      setCommitDetails(newCommitDetails);
+    }
   }
   return (
     <div onClick={() => clickHandler()} style={styles.repo}>
