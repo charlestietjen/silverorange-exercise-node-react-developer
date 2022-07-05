@@ -13,6 +13,7 @@ const externalRequest = async () => {
       return resp.data
     } catch (err) {
       console.log(err);
+      return []
     }
 }
 
