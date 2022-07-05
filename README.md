@@ -1,4 +1,4 @@
-## Notes for reviewer
+Notes for reviewer
 ==============================================
 
 In the interest of full disclosure/honesty, sorting the list of repositories is the last feature I implemented by the 4 hour mark.
