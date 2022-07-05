@@ -1,3 +1,11 @@
+Notes for reviewer
+==============================================
+
+In the interest of full disclosure/honesty, sorting the list of repositories is the last feature I implemented by the 4 hour mark.
+
+The remaining features did not take much longer to implement but I also had not tracked my time accurately post sort feature.
+
+
 silverorange Intermediate Developer Assessment
 ==============================================
 
