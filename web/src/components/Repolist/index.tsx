@@ -1,6 +1,23 @@
+import { Key, useEffect, useState } from 'react';
 import { Repolistitem } from '../Repolistitem';
 
-export function Repolist({ repos }: { repos: never[] }) {
+/* eslint-disable @typescript-eslint/naming-convention */
+
+export function Repolist({ repos }: { repos: any }) {
+  const [sortedList, setSortedList] = useState([]);
+  useEffect(() => {
+    const descSort = repos.sort(
+      (
+        a: { created_at: string | number | Date },
+        b: { created_at: string | number | Date }
+      ) => {
+        return (
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+      }
+    );
+    setSortedList(descSort);
+  }, [repos]);
   const styles = {
     listContainer: {
       width: '80vw',
@@ -8,9 +25,19 @@ export function Repolist({ repos }: { repos: never[] }) {
   };
   return (
     <div style={styles.listContainer}>
-      {repos.map((element, i) => (
-        <Repolistitem key={i} repo={element} />
-      ))}
+      {sortedList.map(
+        (
+          element: {
+            name: string;
+            forks: number;
+            description: string;
+            language: string;
+          },
+          i: Key | null | undefined
+        ) => (
+          <Repolistitem key={i} repo={element} />
+        )
+      )}
     </div>
   );
 }
