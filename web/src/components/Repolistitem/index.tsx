@@ -1,4 +1,6 @@
 import { useState } from 'react';
+// import react-markdown to render our readme when present
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 // disabling naming conventions for the created_at we get back from github
 /* eslint-disable @typescript-eslint/naming-convention */
 
@@ -20,6 +22,7 @@ export function Repolistitem({
     date: 'Date unavailable',
     message: 'Message unavailable',
   });
+  const [readmeMarkdown, setReadmeMarkdown] = useState('');
   const styles = {
     repo: {
       border: 'solid thin gray',
@@ -56,6 +59,13 @@ export function Repolistitem({
       date: commitResponse.commit.author.date,
       message: commitResponse.commit.message,
     };
+    const readmeData = await fetch(
+      `https://api.github.com/repos/${repo.full_name}/readme`
+    ).then((response) => {
+      return response.json();
+    });
+    const readme = atob(readmeData.content);
+    setReadmeMarkdown(readme);
     setCommitDetails(newCommitDetails);
   }
   return (
@@ -76,6 +86,16 @@ export function Repolistitem({
           <div style={styles.messageWrapper}>
             <p style={styles.subheading}>Commit message:</p>
             <p> {commitDetails.message}</p>
+          </div>
+          <div>
+            {readmeMarkdown === '' ? (
+              ''
+            ) : (
+              <>
+                <h3>Readme: </h3>
+                <ReactMarkdown>{readmeMarkdown}</ReactMarkdown>
+              </>
+            )}
           </div>
         </div>
       ) : (
