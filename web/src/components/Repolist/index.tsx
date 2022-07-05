@@ -77,6 +77,8 @@ export function Repolist({ repos }: { repos: any }) {
           description: string;
           language: string;
           id: string;
+          git_commits_url: string;
+          full_name: string;
         }) => (
           <Repolistitem key={element.id} repo={element} />
         )
