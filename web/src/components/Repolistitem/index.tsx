@@ -1,4 +1,6 @@
 import { useState } from 'react';
+// import react-markdown to render our readme when present
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 // disabling naming conventions for the created_at we get back from github
 /* eslint-disable @typescript-eslint/naming-convention */
 
@@ -16,10 +18,11 @@ export function Repolistitem({
 }) {
   const [viewDetails, setViewDetails] = useState(false);
   const [commitDetails, setCommitDetails] = useState({
-    name: 'Author unavailable',
-    date: 'Date unavailable',
-    message: 'Message unavailable',
+    name: '',
+    date: '',
+    message: '',
   });
+  const [readmeMarkdown, setReadmeMarkdown] = useState('');
   const styles = {
     repo: {
       border: 'solid thin gray',
@@ -46,17 +49,38 @@ export function Repolistitem({
   };
   async function clickHandler() {
     setViewDetails(!viewDetails);
-    const commitResponse = await fetch(
-      `https://api.github.com/repos/${repo.full_name}/commits/master`
-    ).then((response) => {
-      return response.json();
-    });
-    const newCommitDetails = {
-      name: commitResponse.commit.author.name,
-      date: commitResponse.commit.author.date,
-      message: commitResponse.commit.message,
-    };
-    setCommitDetails(newCommitDetails);
+    if (commitDetails.name === '') {
+      const commitResponse = await fetch(
+        `https://api.github.com/repos/${repo.full_name}/commits/master`
+      ).then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return {
+          commit: {
+            author: { name: 'Unavailable', date: 'Unavailable' },
+            message: 'No commit data available.',
+          },
+        };
+      });
+      const newCommitDetails = {
+        name: commitResponse.commit.author.name,
+        date: commitResponse.commit.author.date,
+        message: commitResponse.commit.message,
+      };
+      const readmeData = await fetch(
+        `https://api.github.com/repos/${repo.full_name}/readme`
+      ).then((response) => {
+        return response.json();
+      });
+      if (readmeData.content) {
+        const readme = atob(readmeData.content);
+        setReadmeMarkdown(readme);
+      } else {
+        setReadmeMarkdown('');
+      }
+      setCommitDetails(newCommitDetails);
+    }
   }
   return (
     <div onClick={() => clickHandler()} style={styles.repo}>
@@ -76,6 +100,16 @@ export function Repolistitem({
           <div style={styles.messageWrapper}>
             <p style={styles.subheading}>Commit message:</p>
             <p> {commitDetails.message}</p>
+          </div>
+          <div>
+            {readmeMarkdown === '' ? (
+              ''
+            ) : (
+              <>
+                <h3>Readme: </h3>
+                <ReactMarkdown>{readmeMarkdown}</ReactMarkdown>
+              </>
+            )}
           </div>
         </div>
       ) : (
