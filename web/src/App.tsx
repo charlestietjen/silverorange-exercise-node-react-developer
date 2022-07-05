@@ -14,13 +14,19 @@ export function App() {
       } else {
         console.log(res.status);
       }
-      console.log(fullRepoList);
     });
-  }, [fullRepoList]);
+  }, []);
+  const styles = {
+    listWrapper: {
+      display: 'flex',
+      justifyContent: 'center',
+      width: '100%',
+    },
+  };
   return (
     <div className="App">
       <h1>Repo Viewer</h1>
-      <div>
+      <div style={styles.listWrapper}>
         {fullRepoList.length === 0 ? '' : <Repolist repos={fullRepoList} />}
       </div>
     </div>
