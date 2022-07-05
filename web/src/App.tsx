@@ -1,17 +1,8 @@
 import React from 'react';
-import logo from './logo.svg';
+
+import { Repolist } from './components/Repolist';
 
 import './App.css';
-
-// function fetchRepoData() {
-//   return fetch('/repos').then((res) => {
-//     if (res.status === 200) {
-//       return res.json();
-//     } else {
-//       return res.status;
-//     }
-//   });
-// }
 
 export function App() {
   const [fullRepoList, setFullRepoList] = React.useState([]);
@@ -28,20 +19,10 @@ export function App() {
   }, [fullRepoList]);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Repo Viewer</h1>
+      <div>
+        {fullRepoList.length === 0 ? '' : <Repolist repos={fullRepoList} />}
+      </div>
     </div>
   );
 }
