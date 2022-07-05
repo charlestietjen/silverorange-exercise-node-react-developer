@@ -3,8 +3,11 @@ Notes for reviewer
 
 In the interest of full disclosure/honesty, sorting the list of repositories is the last feature I implemented by the 4 hour mark.
 
-The remaining features did not take much longer to implement but I also had not tracked my time accurately post sort feature.
+I wasn't tracking my time closely beyond the sort feature but I think overall I spent about 5 and a half hours, I mainly kept going because I was enjoying it and I lost a fair bit of time to simply not being familiar with eslint/prettier. (I didn't realize I could right click => format w/prettier until I think the 2 hour mark...)
 
+I wanted to tweak some additional styling and do some more significant testing but I'd rather give you all an accurate look at what 4~ hours of work looks like from me so I'll leave it as-is.
+
+Thank you for taking the time to review!
 
 silverorange Intermediate Developer Assessment
 ==============================================
